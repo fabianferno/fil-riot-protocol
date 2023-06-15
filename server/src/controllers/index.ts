@@ -1,9 +1,9 @@
 import { Router } from "express";
 import home from "../home";
-import * as sqlite3 from "sqlite3";
 import Web3 from "web3";
 import * as crypto from "crypto";
 import pushNotification from "../helpers/push";
+import db from "../utilities/polybase";
 
 // WEB3 CONFIG
 import {
@@ -81,27 +81,17 @@ router.post("/data", async (req, res) => {
 
     console.log(req.body);
 
-    // db.run(
-    //   "INSERT INTO sensor_data (deviceId, sensorValue) VALUES (?, ?)",
-    //   [deviceId, sensorValue],
-    //   function (err) {
-    //     if (err) {
-    //       console.error(err.message);
-    //       res.status(500).send("Internal server error");
-    //     }
-    //     // Return the record as response
-    //     db.get(
-    //       `SELECT * FROM sensor_data WHERE id = ${this.lastID}`,
-    //       (err, row) => {
-    //         if (err) {
-    //           console.error(err.message);
-    //           res.status(500).send("Internal server error");
-    //         }
-    //         res.status(200).json(row);
-    //       }
-    //     );
-    //   }
-    // );
+    // Insert the record
+    const record = await db
+      .collection("SensorData")
+      .create([
+        "nasoubahsbas8ahd8ahsdasd",
+        deviceId,
+        sensorValue,
+        new Date().toISOString(),
+      ]);
+
+    res.status(200).json(record);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
@@ -110,14 +100,10 @@ router.post("/data", async (req, res) => {
 
 router.get("/data", async (req, res) => {
   try {
-    // Return the record as response
-    // db.all(`SELECT * FROM sensor_data`, (err, result) => {
-    //   if (err) {
-    //     console.error(err.message);
-    //     res.status(500).send("Internal server error");
-    //   }
-    //   res.status(200).json(result);
-    // });
+    // Get all records
+    const records = await db.collection("SensorData").get();
+
+    res.status(200).json(records);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
@@ -127,13 +113,11 @@ router.get("/data", async (req, res) => {
 router.get("/flush", async (req, res) => {
   try {
     // Delete all records
-    // db.run(`DELETE FROM sensor_data`, (err, result) => {
-    //   if (err) {
-    //     console.error(err.message);
-    //     res.status(500).send("Internal server error");
-    //   }
-    //   res.status(200).json(result);
-    // });
+    const records: any = await db.collection("SensorData").get();
+
+    for (let i = 0; i < records.length; i++) {
+      await db.collection("SensorData").record(records[i].id).call("del");
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
