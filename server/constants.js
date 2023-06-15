@@ -450,14 +450,25 @@ const chains = [
     abi: zkEVMABI,
     contract: zkEVMContractAddress,
   },
+  {
+    chainId: 3141,
+    name: "Filecoin Hyperspace",
+    network: "filecoin-hyperspace",
+    coinName: "tFIL",
+    rpc: "https://api.hyperspace.node.glif.io/rpc/v1",
+    blockExplorer: "https://hyperspace.filfox.info/en",
+    isMainnet: false,
+    icon: "/filecoin.png",
+    // abi: filecoinABI,
+    // contract: filecoinContractAddress,
+  },
 ];
 
-module.exports = {
-  zkEVMContractAddress,
-  mumbaiContractAddress,
-  zkEVMABI,
-  mumbaiABI,
+// Export all the constants
+export {
   chains,
-  RIOT_RPC_URL,
-  riotDeviceImages,
+  zkEVMABI,
+  zkEVMContractAddress,
+  mumbaiABI,
+  mumbaiContractAddress,
 };

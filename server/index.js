@@ -1,24 +1,29 @@
-const express = require("express");
-const cors = require("cors");
-const morgan = require("morgan");
-const app = express();
-const axios = require("axios");
-const sqlite3 = require("sqlite3").verbose();
-const Web3 = require("web3");
-const crypto = require("crypto");
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import streamToBlob from "stream-to-blob";
+import sqlite3 from "sqlite3";
+import Web3 from "web3";
+import crypto from "crypto";
+import fs from "fs";
+import { Writable, pipeline } from "stream";
+import { createReadStream } from "fs";
 
-const dotenv = require("dotenv");
+import { createFileEncoderStream, CAREncoderStream } from "ipfs-car";
+
+import dotenv from "dotenv";
 dotenv.config();
 
 // WEB3 CONFIG
-const {
+import {
   zkEVMContractAddress,
   mumbaiContractAddress,
   zkEVMABI,
   mumbaiABI,
   chains,
-} = require("./constants");
-const { getEnabledCategories } = require("trace_events");
+} from "./constants.js";
+
+let app = express();
 
 const db = new sqlite3.Database("./database.db", (err) => {
   if (err) {
@@ -184,6 +189,21 @@ app.get("/time-util-midnight-timmestamp", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// app.post("/generate-car", async (req, res) => {
+//   try {
+//     const file = req.body.file;
+
+//     const carStream = createFileEncoderStream(file)
+//       .pipeThrough(new CAREncoderStream())
+//       .pipeTo(Writable.toWeb(process.stdout));
+
+//     res.send(carData);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 
 app.get("/web3-config", async (req, res) => {
   try {
