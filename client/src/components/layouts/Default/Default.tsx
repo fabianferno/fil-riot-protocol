@@ -1,13 +1,47 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
 import { Container } from '@chakra-ui/react';
 import { Footer, Header } from 'components/modules';
 import Head from 'next/head';
 import { useColorModeValue } from '@chakra-ui/react';
+import { EmbedSDK } from "@pushprotocol/uiembed";
+import { useSelector } from 'react-redux';
+
+
 
 const Default: FC<{ children: ReactNode; pageName: string }> = ({ children, pageName }) => {
+  const { currentAccount } = useSelector((state: any) => state.metamask);
+
+
   const bgColor = useColorModeValue('blackAlpha.200', 'blackAlpha.500');
   // const textColor = useColorModeValue("#000000", "#FFFFFF");
+  useEffect(() => {
+    if (currentAccount) { // 'your connected wallet address'
+      EmbedSDK.init({
+        headerText: 'Riot Alerts - powered by Push', // optional
+        targetID: 'sdk-trigger-id', // mandatory
+        appName: 'the-riot-protocol', // mandatory
+        user: currentAccount, // mandatory
+        chainId: 1, // mandatory
+        viewOptions: {
+          type: 'sidebar', // optional [default: 'sidebar', 'modal']
+          showUnreadIndicator: true, // optional
+          unreadIndicatorColor: '#cc1919',
+          unreadIndicatorPosition: 'bottom-right',
+        },
+        theme: 'dark',
+        onOpen: () => {
+          console.log('-> client dApp onOpen callback');
+        },
+        onClose: () => {
+          console.log('-> client dApp onClose callback');
+        }
+      });
+    }
 
+    return () => {
+      EmbedSDK.cleanup();
+    };
+  }, []);
   return (
     <>
       <Head>

@@ -18,6 +18,16 @@ def hashify(contents):
     response = urequests.request("POST",RIOT_RPC_URL+"/hashify", headers={'Content-Type': 'application/json'}, data=payload) 
     hash = "0x"+ response.json().get("hash")  
     return hash
+
+def pushNotification(deviceId, message):
+    # Send these token ingredients and get the riot key from the main server
+    payload = json.dumps({
+        "deviceId": deviceId,
+        "message": message
+    })
+    response = urequests.request("POST",RIOT_RPC_URL+"/push-notification", headers={'Content-Type': 'application/json'}, data=payload) 
+    data = response.json()
+    return data
 # Helper functions end here 
 
 def getCipherFromKey(riot_key_hex):
@@ -90,4 +100,5 @@ def authenticateDevice(deviceId):
     print("Recieved Riot Key: ", key)
     if(key == None):
         raise Exception("Invalid Riot Key")
+    pushNotification(deviceId, "Device authenticated successfully")
     return key 

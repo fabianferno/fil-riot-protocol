@@ -1,6 +1,0 @@
-DB CREATE TABLE sensor_data (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    deviceId TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    sensorValue TEXT
-);
