@@ -16,11 +16,17 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { mumbaiABI, mumbaiContractAddress } from './metamask/lib/constants';
+import { organisationABI } from './metamask/lib/constants';
 import contractCall from './metamask/lib/contract-call';
 
-const TransferDeviceModal = ({ tokenId, isOpen, onClose }: {
+const TransferDeviceModal = ({
+  tokenId,
+  organisationContractAddress,
+  isOpen,
+  onClose,
+}: {
   tokenId: string;
+  organisationContractAddress: string;
   isOpen: boolean;
   onClose: () => void;
 }) => {
@@ -69,9 +75,9 @@ const TransferDeviceModal = ({ tokenId, isOpen, onClose }: {
                   setStatus('Waiting for Confirmation...');
                   setShowNotification(true);
                   let response = await contractCall(
-                    mumbaiContractAddress,
+                    organisationContractAddress,
                     currentAccount,
-                    mumbaiABI,
+                    organisationABI,
                     [tokenId, subscriber],
                     0,
                     'setSubscriberAddress(uint,address)',

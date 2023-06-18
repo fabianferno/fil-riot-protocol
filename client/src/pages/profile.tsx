@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Default } from 'components/layouts/Default';
-import { Box, Stack, } from '@chakra-ui/react';
+import { Box, Stack } from '@chakra-ui/react';
 import Image from 'next/image';
 import { mumbaiContractAddress, riotDeviceImages } from 'components/metamask/lib/constants';
 import { useSelector } from 'react-redux';
@@ -10,7 +10,7 @@ import getTimeDifferenceString from 'utils/getTimeDifference';
 import EthAddressResolver from 'components/modules/EthAddressResolver';
 
 import web3 from 'web3';
-import TransferDeviceModal from 'components/transferDeviceModal';
+import TransferDeviceModal from 'components/TransferDeviceModal';
 
 const Profile = () => {
   const [selected, setSelected] = useState(0);
@@ -19,8 +19,7 @@ const Profile = () => {
   const [accessToken, setAccessToken] = useState('');
   const [openSendDeviceModal, setOpenSendDeviceModal] = useState(false);
   const { currentAccount } = useSelector((state: any) => state.metamask);
-  const [transferTokenId, setTransferTokenId] = useState("-1");
-
+  const [transferTokenId, setTransferTokenId] = useState('-1');
 
   useEffect(() => {
     try {
@@ -61,7 +60,7 @@ const Profile = () => {
             });
         });
       });
-    } catch (e) { }
+    } catch (e) {}
   }, []);
   return (
     <Default pageName="Profile">
@@ -85,8 +84,9 @@ const Profile = () => {
                 onClick={() => {
                   setSelected(0);
                 }}
-                className={`mx-2  ${selected == 0 ? 'bg-gray-500' : 'hover:bg-gray-500'
-                  } text-white p-2 rounded-md font-semibold `}
+                className={`mx-2  ${
+                  selected == 0 ? 'bg-gray-500' : 'hover:bg-gray-500'
+                } text-white p-2 rounded-md font-semibold `}
               >
                 Devices
               </button>
@@ -111,8 +111,9 @@ const Profile = () => {
                   });
                   setSelected(1);
                 }}
-                className={`mx-2  ${selected == 1 ? 'bg-gray-500' : 'hover:bg-gray-500'
-                  } text-white p-2 rounded-md font-semibold `}
+                className={`mx-2  ${
+                  selected == 1 ? 'bg-gray-500' : 'hover:bg-gray-500'
+                } text-white p-2 rounded-md font-semibold `}
               >
                 Activity
               </button>
@@ -163,8 +164,9 @@ const Profile = () => {
                 <div className="flex justify-center w-full">
                   <div
                     key={index}
-                    className={`flex justify-start p-3  rounded-lg ${type == 'Minted' ? 'bg-lime-600' : type == 'Received' ? 'bg-yellow-500' : 'bg-rose-700'
-                      } bg-opacity-30 mb-2 ml-6 `}
+                    className={`flex justify-start p-3  rounded-lg ${
+                      type == 'Minted' ? 'bg-lime-600' : type == 'Received' ? 'bg-yellow-500' : 'bg-rose-700'
+                    } bg-opacity-30 mb-2 ml-6 `}
                     onClick={() => {
                       window.open(`https://mumbai.polygonscan.com/tx/${transactionHash}`);
                     }}
