@@ -77,9 +77,6 @@ export default async function contractCall(
           from: currentAccount,
           to: contractAddress,
           data: encodedData,
-          gasLimit: 100000000,
-          maxFeePerGas: 78000000000,
-          maxPriorityFeePerGas: 3000000000,
         },
         'latest', // Use the latest block number
       ],

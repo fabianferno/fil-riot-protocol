@@ -290,42 +290,45 @@ const CreateDeviceModal = ({
                   setShowNotification(true);
                   let metadataHash;
                   try {
-                    const storageToken = await getUploadToken();
-                    const metadataObject = {
-                      name: 'Riot Association',
-                      symbol: 'RA',
-                      groupId: deviceGroupIdHash,
-                      systemName,
-                      releaseName,
-                      chipName,
-                      chipId,
-                      deviceId: deviceId,
-                      image: riotDeviceImages[Math.floor(Math.random() * riotDeviceImages.length)],
-                      deviceDataHash: deviceDataHash,
-                    };
-                    let currentlyUploaded = 0;
-                    const { cid } = await upload([convertObjectToFile(metadataObject, 'metadata.json')], {
-                      token: storageToken,
-                      onChunkUploaded(uploadedSize, totalSize) {
-                        currentlyUploaded += uploadedSize;
-                        console.log(`Uploaded ${currentlyUploaded} of ${totalSize} Bytes.`);
-                      },
-                    });
+                    // const storageToken = await getUploadToken();
+                    // const metadataObject = {
+                    //   name: 'Riot Association',
+                    //   symbol: 'RA',
+                    //   groupId: deviceGroupIdHash,
+                    //   systemName,
+                    //   releaseName,
+                    //   chipName,
+                    //   chipId,
+                    //   deviceId: deviceId,
+                    //   image: riotDeviceImages[Math.floor(Math.random() * riotDeviceImages.length)],
+                    //   deviceDataHash: deviceDataHash,
+                    // };
+                    // let currentlyUploaded = 0;
+                    // const { cid } = await upload([convertObjectToFile(metadataObject, 'metadata.json')], {
+                    //   token: storageToken,
+                    //   onChunkUploaded(uploadedSize, totalSize) {
+                    //     currentlyUploaded += uploadedSize;
+                    //     console.log(`Uploaded ${currentlyUploaded} of ${totalSize} Bytes.`);
+                    //   },
+                    // });
 
-                    metadataHash = `https://ipfs.io/ipfs/${cid}/metadata.json`;
+                    // metadataHash = `https://ipfs.io/ipfs/${cid}/metadata.json`;
+                    metadataHash =
+                      'https://ipfs.io/ipfs/bafybeigozo235d36e7iukpouyzsy7qnr55rwkk2grlwu3t2ysa5rhy2osm/metadata.json';
+
                     console.log('IPFS Hash of the deployed Riot NFT: ' + metadataHash);
                   } catch (e) {
                     console.log(e);
                   }
                   setStatus('Waiting for Confirmation...');
                   setShowNotification(true);
-                  const sessionSalt = await getSessionSalt();
+                  const { randomness } = await getSessionSalt();
 
                   const response = await contractCall(
                     organisationAddress,
                     currentAccount,
                     organisationABI,
-                    [[deviceId, firmwareHash, deviceDataHash, deviceGroupIdHash, sessionSalt, metadataHash]],
+                    [[deviceId, firmwareHash, deviceDataHash, deviceGroupIdHash, '0x' + randomness, metadataHash]],
                     0,
                     'createDevice([address,bytes32,bytes32,bytes32,bytes32,string])',
                     false,
