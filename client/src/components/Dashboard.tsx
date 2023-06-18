@@ -66,14 +66,14 @@ const Dashboard = () => {
       if (_organisations.length > 0) {
         let formattedOrganisations = [];
         for (let i = 0; i < _organisations.length; i++) {
-          const fetchedDescription = await fetch(_organisations[i].metadata + '/metadata.json');
-          const { description } = await fetchedDescription.json();
+          // const fetchedDescription = await fetch(_organisations[i].metadata + '/metadata.json');
+          // const { description } = await fetchedDescription.json();
           formattedOrganisations.push({
             name: _organisations[i].name,
             id: (i + 1).toString(),
             address: _organisations[i].organisationContractAddress,
             symbol: _organisations[i].symbol,
-            description: description,
+            // description: description,
             creator: _organisations[i].creator,
           });
         }
