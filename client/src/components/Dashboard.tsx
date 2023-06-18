@@ -20,13 +20,28 @@ import contractCall from './metamask/lib/contract-call';
 const Dashboard = () => {
   const { currentAccount } = useSelector((state: any) => state.metamask);
 
-  const [selected, setSelected] = useState('1');
+  const [selected, setSelected] = useState('0');
   const [uploadToken, setUploadToken] = useState(null);
   const [showCreateOrganisation, setShowCreateOrganisation] = useState(false);
   const [organisations, setOrganisations] = useState([]);
   const [devices, setDevices] = useState([]);
 
-  useEffect(() => {}, [selected]);
+  useEffect(() => {
+    (async function () {
+      if (selected != '0') {
+        const _devices = await contractCall(
+          organisations[parseInt(selected) - 1].address,
+          currentAccount,
+          organisationABI,
+          [],
+          0,
+          'getDevices()',
+          true,
+        );
+        setDevices(_devices);
+      }
+    })();
+  }, [selected]);
   useEffect(() => {
     (async function () {
       const _organisations = await contractCall(
@@ -119,13 +134,15 @@ const Dashboard = () => {
         <GridItem h="200px" colSpan={4} rowSpan={1} bg="#141214" borderRadius={'md'} marginBottom={'20px'}>
           <Flex>
             <Text fontSize="3xl" fontWeight={'bold'} margin={'20px'}>
-              {organisations[parseInt(selected) - 1].name}
+              {selected != '0' && organisations[parseInt(selected) - 1].name}
             </Text>
             <Spacer />
-            <Button margin={'20px'}>➕ Create Device</Button>
+            <Button margin={'20px'} disabled={selected == '0'}>
+              ➕ Create Device
+            </Button>
           </Flex>
           <Divider marginBottom={'20px'} borderColor="gray.900" />
-          <Text margin={'20px'}>{organisations[parseInt(selected) - 1].description}</Text>
+          <Text margin={'20px'}>{selected != '0' && organisations[parseInt(selected) - 1].description}</Text>
         </GridItem>
 
         <GridItem colSpan={2} rowSpan={4} bg="#141214" borderRadius={'md'} marginBottom={'20px'}>
@@ -134,7 +151,7 @@ const Dashboard = () => {
           </Text>
           <Divider marginBottom={'20px'} borderColor="gray.900" />
           <VStack spacing={2} align="stretch" padding="10px" borderRadius={'md'}>
-            {organisations[parseInt(selected) - 1].devices.map((device) => (
+            {devices.map((device) => (
               <Grid
                 templateRows="repeat(2, 1fr)"
                 templateColumns="repeat(4, 1fr)"
@@ -150,16 +167,16 @@ const Dashboard = () => {
                 // onClick={() => setSelected(org.id)}
               >
                 <GridItem colSpan={1} rowSpan={2}>
-                  <Image src="https://picsum.photos/100" alt={device.name} />
+                  <Image src="https://picsum.photos/100" alt={device.subscriber} />
                 </GridItem>
                 <GridItem colSpan={3} rowSpan={1} paddingTop="15px">
                   <Text textAlign="start" fontWeight={'bold'}>
-                    {device.name}
+                    {device.subscriber}
                   </Text>
                 </GridItem>
                 <GridItem colSpan={3} rowSpan={1} paddingBottom="15px">
                   <Text textAlign={'center'} fontWeight="normal">
-                    {device.address}
+                    {device.deviceId}
                   </Text>
                 </GridItem>
               </Grid>
