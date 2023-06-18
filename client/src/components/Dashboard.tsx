@@ -18,8 +18,13 @@ import CreateDeviceModal from './createDeviceModal';
 import CreateOrganisationModal from './createOrganisationModal';
 import { organisationABI, protocolABI, protocolAddress } from './metamask/lib/constants';
 import contractCall from './metamask/lib/contract-call';
+import ViewData from '../pages/view-data';
+import TransferDeviceModal from '../components/transferDeviceModal';
 
 const Dashboard = () => {
+  const [showTransfersModal, setShowTransfersModal] = useState(false);
+  const [selectedDevice, setSelectedDevice] = useState(null);
+
   const { currentAccount } = useSelector((state: any) => state.metamask);
 
   const [selected, setSelected] = useState('0');
@@ -177,6 +182,10 @@ const Dashboard = () => {
             {devices.length > 0 ? (
               devices.map((device) => (
                 <Grid
+                  onClick={() => {
+                    setShowTransfersModal(true);
+                    setSelectedDevice(device.deviceId);
+                  }}
                   templateRows="repeat(2, 1fr)"
                   templateColumns="repeat(4, 1fr)"
                   as="button"
@@ -222,43 +231,17 @@ const Dashboard = () => {
           </Text>
           <Divider marginBottom={'20px'} borderColor="gray.900" />
           <VStack spacing={2} align="stretch" padding="10px" borderRadius={'md'}>
-            {devices.length > 0 ? (
-              devices.map((device) => (
-                <Grid
-                  templateRows="repeat(2, 1fr)"
-                  templateColumns="repeat(4, 1fr)"
-                  as="button"
-                  h="120px"
-                  p="2"
-                  bg={'gray.800'}
-                  borderRadius={'md'}
-                  fontWeight={'medium'}
-                  textColor={'white'}
-                  _hover={{ bg: 'gray.200', textColor: 'black' }}
-
-                  // onClick={() => setSelected(org.id)}
-                >
-                  <GridItem colSpan={1} rowSpan={2}>
-                    <Image src="https://picsum.photos/100" alt={device.subscriber} />
-                  </GridItem>
-                  <GridItem colSpan={3} rowSpan={1} paddingTop="15px">
-                    <Text textAlign="start" fontWeight={'bold'}>
-                      {device.subscriber}
-                    </Text>
-                  </GridItem>
-                  <GridItem colSpan={3} rowSpan={1} paddingBottom="15px">
-                    <Text textAlign={'center'} fontWeight="normal">
-                      {device.deviceId}
-                    </Text>
-                  </GridItem>
-                </Grid>
-              ))
-            ) : (
-              <Text margin={'100px'}>No Data Yet!</Text>
-            )}
+            {devices.length > 0 ? <ViewData /> : <Text margin={'100px'}>No Data Yet!</Text>}
           </VStack>
         </GridItem>
       </Grid>
+      <TransferDeviceModal
+        isOpen={showTransfersModal}
+        onClose={() => {
+          setShowTransfersModal(false);
+        }}
+        deviceId={selectedDevice}
+      />
       <CreateOrganisationModal
         isOpen={showCreateOrganisation}
         onClose={() => {

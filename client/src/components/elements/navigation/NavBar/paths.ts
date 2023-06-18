@@ -6,13 +6,13 @@ export default function getNavLinks() {
   return currentAccount == ''
     ? []
     : [
-        {
-          label: 'Home',
-          href: '/mint-device',
-        },
-        {
-          label: 'Profile',
-          href: '/view-data',
-        },
+        // {
+        //   label: 'Home',
+        //   href: '/mint-device',
+        // },
+        // {
+        //   label: 'Profile',
+        //   href: '/view-data',
+        // },
       ];
 }

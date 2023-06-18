@@ -276,7 +276,7 @@ const CreateDeviceModal = ({
               </Text>
               <div>
                 <Button colorScheme="red" onClick={onClose}>
-                  ❌ CLOSE
+                  Close
                 </Button>
                 <Button
                   mx={6}
