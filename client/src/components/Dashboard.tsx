@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import CreateDeviceModal from './createDeviceModal';
 import CreateOrganisationModal from './createOrganisationModal';
 import { organisationABI, protocolABI, protocolAddress } from './metamask/lib/constants';
 import contractCall from './metamask/lib/contract-call';
@@ -23,6 +24,7 @@ const Dashboard = () => {
   const [selected, setSelected] = useState('0');
   const [uploadToken, setUploadToken] = useState(null);
   const [showCreateOrganisation, setShowCreateOrganisation] = useState(false);
+  const [showCreateDeviceModal, setShowCreateDeviceModal] = useState(false);
   const [organisations, setOrganisations] = useState([]);
   const [devices, setDevices] = useState([]);
 
@@ -39,6 +41,12 @@ const Dashboard = () => {
           true,
         );
         setDevices(_devices);
+        let modifiedOrganisations = organisations.map((org: Object, index) => {
+          if (index == parseInt(selected) - 1) {
+            return { ...org, description: 'This is so awesome!' };
+          }
+          return org;
+        });
       }
     })();
   }, [selected]);
@@ -60,6 +68,7 @@ const Dashboard = () => {
           id: (index + 1).toString(),
           address: org.organisationContractAddress,
           symbol: org.symbol,
+          metadata: org.metadata,
           creator: org.creator,
         }));
 
@@ -77,7 +86,7 @@ const Dashboard = () => {
         setDevices(_devices);
       }
     })();
-  });
+  }, []);
   return (
     <>
       <Box fontSize="3xl" fontWeight={'bold'} marginBottom={'20px'}>
@@ -107,7 +116,7 @@ const Dashboard = () => {
                 justifyContent={'center'}
                 onClick={() => setSelected(org.id)}
               >
-                {org.name}
+                {`${org.name} | ${org.symbol}`}
               </Box>
             ))}
             <Box
@@ -131,13 +140,20 @@ const Dashboard = () => {
             </Box>
           </VStack>
         </GridItem>
-        <GridItem h="200px" colSpan={4} rowSpan={1} bg="#141214" borderRadius={'md'} marginBottom={'20px'}>
+        <GridItem h="200px" colSpan={4} rowSpan={1} bg="#141214" bo rderRadius={'md'} marginBottom={'20px'}>
           <Flex>
             <Text fontSize="3xl" fontWeight={'bold'} margin={'20px'}>
-              {selected != '0' && organisations[parseInt(selected) - 1].name}
+              {selected != '0' &&
+                `${organisations[parseInt(selected) - 1].name} | ${organisations[parseInt(selected) - 1].symbol}`}
             </Text>
             <Spacer />
-            <Button margin={'20px'} disabled={selected == '0'}>
+            <Button
+              margin={'20px'}
+              disabled={selected == '0'}
+              onClick={() => {
+                setShowCreateDeviceModal(true);
+              }}
+            >
               ➕ Create Device
             </Button>
           </Flex>
@@ -195,6 +211,15 @@ const Dashboard = () => {
           setShowCreateOrganisation(false);
         }}
       />
+      {organisations.length > 0 && (
+        <CreateDeviceModal
+          isOpen={showCreateDeviceModal}
+          onClose={() => {
+            setShowCreateDeviceModal(false);
+          }}
+          organisationAddress={organisations[parseInt(selected) - 1].address}
+        />
+      )}
     </>
   );
 };

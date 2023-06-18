@@ -117,21 +117,23 @@ const CreateOrganisationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose
                 variant="outline"
                 isDisabled={name == '' || symbol == '' || emoji == '' || description == ''}
                 onClick={async () => {
-                  setStatus('Waiting for Confirmation...');
+                  setStatus('Uploading Metadata to IPFS with Spheron...');
                   setShowNotification(true);
                   let currentlyUploaded = 0;
-                  // const storageToken = await getUploadToken();
-                  // console.log('Received Storage Token');
-                  // console.log(storageToken);
-                  // const { cid } = await upload([convertObjectToFile({ name, symbol, emoji, description }, name)], {
-                  //   token: storageToken,
-                  //   onChunkUploaded(uploadedSize, totalSize) {
-                  //     currentlyUploaded += uploadedSize;
-                  //     console.log(`Uploaded ${currentlyUploaded} of ${totalSize} Bytes.`);
-                  //   },
-                  // });
-                  // let metadataUri = `https://ipfs.io/ipfs/${cid}`;
-                  let metadataUri = 'https://ipfs.io/ipfs/bafybeiflby3whlpmbxuvmobp7fqsrhrbhylpn2cxgvk3lfn4vsib5b3moq/';
+                  const storageToken = await getUploadToken();
+                  console.log('Received Storage Token');
+                  console.log(storageToken);
+                  const { cid } = await upload([convertObjectToFile({ name, symbol, emoji, description }, name)], {
+                    token: storageToken,
+                    onChunkUploaded(uploadedSize, totalSize) {
+                      currentlyUploaded += uploadedSize;
+                      console.log(`Uploaded ${currentlyUploaded} of ${totalSize} Bytes.`);
+                    },
+                  });
+                  let metadataUri = `https://ipfs.io/ipfs/${cid}`;
+                  // let metadataUri = 'https://ipfs.io/ipfs/bafybeiflby3whlpmbxuvmobp7fqsrhrbhylpn2cxgvk3lfn4vsib5b3moq/';
+                  setStatus('Waiting for Confirmation...');
+
                   let response = await contractCall(
                     protocolAddress,
                     currentAccount,

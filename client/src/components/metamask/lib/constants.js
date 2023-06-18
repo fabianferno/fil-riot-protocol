@@ -1,5 +1,9 @@
 const RIOT_RPC_URL = process.env.RIOT_RPC_URL || 'https://riot-rpc-server.adaptable.app';
-
+const riotDeviceImages = [
+  // 'https://bafkreidmkpibpkguvrnzuqgmudacxji4fl6g437wrtb74t5uliqihuhede.ipfs.nftstorage.link/',
+  // 'https://bafkreibufkhlr6kaq4mhb4tpczbwtzm7jx2q7nrnwed2ndk6klrv6da54u.ipfs.nftstorage.link/',
+  'https://bafybeice6wite46sx5ztubkuafmxhjmacq6iivhlvl23fokf6ql3mqwc44.ipfs.nftstorage.link/',
+];
 const protocolAddress = '0x0AE7d655Cda406c5b73Ea76855e2cE6aC3812a8E';
 const protocolABI = [
   {
@@ -1901,4 +1905,13 @@ const chains = [
     blockExplorer: 'https://fvm.starboard.ventures/calibration/explorer/',
   },
 ];
-export { protocolAddress, protocolABI, clientAddress, clientABI, organisationABI, chains, RIOT_RPC_URL };
+export {
+  riotDeviceImages,
+  protocolAddress,
+  protocolABI,
+  clientAddress,
+  clientABI,
+  organisationABI,
+  chains,
+  RIOT_RPC_URL,
+};
