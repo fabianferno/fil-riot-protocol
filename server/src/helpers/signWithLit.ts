@@ -65,8 +65,10 @@ const signReadingsWithLit = async (messageToBeSigned: string) => {
   });
   await litNodeClient.connect();
 
+  console.log("Message to be signed: ", messageToBeSigned);
+
   // Message to sign must be a Uint8Array
-  const message = u8a.fromString(messageToBeSigned, "base16");
+  const message = u8a.fromString(messageToBeSigned);
 
   const signatures = await litNodeClient.executeJs({
     code: litActionCode,
