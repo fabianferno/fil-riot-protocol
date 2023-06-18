@@ -17,7 +17,7 @@ const config = {
         bg: mode('gray.100', '#141214')(props),
       },
     }),
-  }
+  },
 };
 
 const theme = extendTheme({ config });

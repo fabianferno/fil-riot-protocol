@@ -3,19 +3,17 @@ import { Container } from '@chakra-ui/react';
 import { Footer, Header } from 'components/modules';
 import Head from 'next/head';
 import { useColorModeValue } from '@chakra-ui/react';
-import { EmbedSDK } from "@pushprotocol/uiembed";
+import { EmbedSDK } from '@pushprotocol/uiembed';
 import { useSelector } from 'react-redux';
-
-
 
 const Default: FC<{ children: ReactNode; pageName: string }> = ({ children, pageName }) => {
   const { currentAccount } = useSelector((state: any) => state.metamask);
 
-
   const bgColor = useColorModeValue('blackAlpha.200', 'blackAlpha.500');
   // const textColor = useColorModeValue("#000000", "#FFFFFF");
   useEffect(() => {
-    if (currentAccount) { // 'your connected wallet address'
+    if (currentAccount) {
+      // 'your connected wallet address'
       EmbedSDK.init({
         headerText: 'Riot Alerts - powered by Push', // optional
         targetID: 'sdk-trigger-id', // mandatory
@@ -34,7 +32,7 @@ const Default: FC<{ children: ReactNode; pageName: string }> = ({ children, page
         },
         onClose: () => {
           console.log('-> client dApp onClose callback');
-        }
+        },
       });
     }
 
@@ -47,6 +45,7 @@ const Default: FC<{ children: ReactNode; pageName: string }> = ({ children, page
       <Head>
         <title>{`${pageName} | the-riot-protocol`}</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <script async src="https://saturn.tech/widget.js"></script>
       </Head>
       <Header />
       <Container
