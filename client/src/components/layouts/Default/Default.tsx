@@ -19,7 +19,7 @@ const Default: FC<{ children: ReactNode; pageName: string }> = ({ children, page
         targetID: 'sdk-trigger-id', // mandatory
         appName: 'the-riot-protocol', // mandatory
         user: currentAccount, // mandatory
-        chainId: 1, // mandatory
+        chainId: 314159, // mandatory
         viewOptions: {
           type: 'sidebar', // optional [default: 'sidebar', 'modal']
           showUnreadIndicator: true, // optional
