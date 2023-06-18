@@ -193,13 +193,19 @@ const Dashboard = () => {
                   <GridItem colSpan={1} rowSpan={2}>
                     <Image src="https://picsum.photos/100" alt={device.subscriber} />
                   </GridItem>
-                  <GridItem colSpan={3} rowSpan={1} paddingTop="15px">
+                  <GridItem colSpan={3} rowSpan={1}>
                     <Text textAlign="start" fontWeight={'bold'}>
+                      Subscriber Address
+                    </Text>
+                    <Text textAlign="start" fontWeight="normal" fontSize={'12px'}>
                       {device.subscriber}
                     </Text>
                   </GridItem>
-                  <GridItem colSpan={3} rowSpan={1} paddingBottom="15px">
-                    <Text textAlign={'center'} fontWeight="normal">
+                  <GridItem colSpan={3} rowSpan={1} paddingBottom="25px">
+                    <Text textAlign="start" fontWeight={'bold'}>
+                      Device Id
+                    </Text>
+                    <Text textAlign={'start'} fontWeight="normal" fontSize={'12px'}>
                       {device.deviceId}
                     </Text>
                   </GridItem>

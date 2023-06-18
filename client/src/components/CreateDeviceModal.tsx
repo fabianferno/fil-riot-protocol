@@ -274,80 +274,85 @@ const CreateDeviceModal = ({
               <Text fontSize={'2xl'}>
                 <strong>Token Ingredients</strong>
               </Text>
-              <Button
-                mx={6}
-                colorScheme="teal"
-                variant="outline"
-                isDisabled={
-                  buttonText === 'Enter Device Group Id Hash' ||
-                  deviceId === '' ||
-                  firmwareHash == '' ||
-                  deviceMinted ||
-                  buttonText == 'Invalid Device ID'
-                }
-                onClick={async () => {
-                  setStatus('Uploading RiotNFT to IPFS...');
-                  setShowNotification(true);
-                  let metadataHash;
-                  try {
-                    const storageToken = await getUploadToken();
-                    const metadataObject = {
-                      name: 'Riot Association',
-                      symbol: 'RA',
-                      groupId: deviceGroupIdHash,
-                      systemName,
-                      releaseName,
-                      chipName,
-                      chipId,
-                      deviceId: deviceId,
-                      image: riotDeviceImages[Math.floor(Math.random() * riotDeviceImages.length)],
-                      deviceDataHash: deviceDataHash,
-                    };
-                    let currentlyUploaded = 0;
-                    const { cid } = await upload([convertObjectToFile(metadataObject, 'metadata.json')], {
-                      token: storageToken,
-                      onChunkUploaded(uploadedSize, totalSize) {
-                        currentlyUploaded += uploadedSize;
-                        console.log(`Uploaded ${currentlyUploaded} of ${totalSize} Bytes.`);
-                      },
-                    });
-
-                    metadataHash = `https://ipfs.io/ipfs/${cid}/metadata.json`;
-                    // metadataHash =
-                    //   'https://ipfs.io/ipfs/bafybeigozo235d36e7iukpouyzsy7qnr55rwkk2grlwu3t2ysa5rhy2osm/metadata.json';
-
-                    console.log('IPFS Hash of the deployed Riot NFT: ' + metadataHash);
-                  } catch (e) {
-                    console.log(e);
+              <div>
+                <Button colorScheme="red" onClick={onClose}>
+                  ❌ CLOSE
+                </Button>
+                <Button
+                  mx={6}
+                  colorScheme="teal"
+                  variant="outline"
+                  isDisabled={
+                    buttonText === 'Enter Device Group Id Hash' ||
+                    deviceId === '' ||
+                    firmwareHash == '' ||
+                    deviceMinted ||
+                    buttonText == 'Invalid Device ID'
                   }
-                  setStatus('Waiting for Confirmation...');
-                  setShowNotification(true);
-                  const { randomness } = await getSessionSalt();
-
-                  const response = await contractCall(
-                    organisationAddress,
-                    currentAccount,
-                    organisationABI,
-                    [[deviceId, firmwareHash, deviceDataHash, deviceGroupIdHash, '0x' + randomness, metadataHash]],
-                    0,
-                    'createDevice([address,bytes32,bytes32,bytes32,bytes32,string])',
-                    false,
-                  );
-
-                  if (response == 'Execution Complete') {
-                    setStatus('Processing Transaction...');
+                  onClick={async () => {
+                    setStatus('Uploading RiotNFT to IPFS...');
                     setShowNotification(true);
-                    setInterval(() => {
-                      setStatus('Device minted successfully!');
+                    let metadataHash;
+                    try {
+                      const storageToken = await getUploadToken();
+                      const metadataObject = {
+                        name: 'Riot Association',
+                        symbol: 'RA',
+                        groupId: deviceGroupIdHash,
+                        systemName,
+                        releaseName,
+                        chipName,
+                        chipId,
+                        deviceId: deviceId,
+                        image: riotDeviceImages[Math.floor(Math.random() * riotDeviceImages.length)],
+                        deviceDataHash: deviceDataHash,
+                      };
+                      let currentlyUploaded = 0;
+                      const { cid } = await upload([convertObjectToFile(metadataObject, 'metadata.json')], {
+                        token: storageToken,
+                        onChunkUploaded(uploadedSize, totalSize) {
+                          currentlyUploaded += uploadedSize;
+                          console.log(`Uploaded ${currentlyUploaded} of ${totalSize} Bytes.`);
+                        },
+                      });
+
+                      metadataHash = `https://ipfs.io/ipfs/${cid}/metadata.json`;
+                      // metadataHash =
+                      //   'https://ipfs.io/ipfs/bafybeigozo235d36e7iukpouyzsy7qnr55rwkk2grlwu3t2ysa5rhy2osm/metadata.json';
+
+                      console.log('IPFS Hash of the deployed Riot NFT: ' + metadataHash);
+                    } catch (e) {
+                      console.log(e);
+                    }
+                    setStatus('Waiting for Confirmation...');
+                    setShowNotification(true);
+                    const { randomness } = await getSessionSalt();
+
+                    const response = await contractCall(
+                      organisationAddress,
+                      currentAccount,
+                      organisationABI,
+                      [[deviceId, firmwareHash, deviceDataHash, deviceGroupIdHash, '0x' + randomness, metadataHash]],
+                      0,
+                      'createDevice([address,bytes32,bytes32,bytes32,bytes32,string])',
+                      false,
+                    );
+
+                    if (response == 'Execution Complete') {
+                      setStatus('Processing Transaction...');
                       setShowNotification(true);
-                    }, 15000);
-                  } else {
-                    setStatus('Transaction Failed or Cancelled');
-                  }
-                }}
-              >
-                {buttonText}
-              </Button>
+                      setInterval(() => {
+                        setStatus('Device minted successfully!');
+                        setShowNotification(true);
+                      }, 15000);
+                    } else {
+                      setStatus('Transaction Failed or Cancelled');
+                    }
+                  }}
+                >
+                  {buttonText}
+                </Button>
+              </div>
             </Flex>
           </form>
           <SlideFade in={showNotification} offsetY="-20px">
