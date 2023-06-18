@@ -2,7 +2,7 @@
   "name": "the-riot-protocol",
   "version": "2.0.0",
   "private": true,
-  "homepage": "https://riot-protocol.vercel.app/",
+  "homepage": "https://fil-riot-protocol.vercel.app/",
   "scripts": {
     "format": "prettier . \"**/*.+(js|ts|json)\" --write --ignore-path .gitignore",
     "format:check": "prettier . \"**/*.+(js|ts|json)\" --check --ignore-path .gitignore",
@@ -19,6 +19,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@lit-protocol/lit-node-client": "^2.2.26",
     "@metamask/detect-provider": "^2.0.0",
     "@metamask/sdk": "^0.2.2",
     "@pushprotocol/restapi": "^1.3.8",
