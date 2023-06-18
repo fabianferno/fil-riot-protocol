@@ -4,6 +4,8 @@ import Web3 from "web3";
 import * as crypto from "crypto";
 import pushNotification from "../helpers/push";
 import db from "../utilities/polybase";
+import { ulid } from "ulid";
+import { signReadingsWithLit } from "../helpers/signWithLit";
 
 // WEB3 CONFIG
 import {
@@ -13,6 +15,7 @@ import {
   mumbaiABI,
   chains,
 } from "../helpers/constants";
+import { verifySignature } from "@pushprotocol/restapi/src/lib/chat/helpers";
 
 // const db = new sqlite3.Database("./utilities/database.db", (err) => {
 //   if (err) {
@@ -78,18 +81,20 @@ router.post("/hashify", async (req, res) => {
 router.post("/data", async (req, res) => {
   try {
     const { sensorValue, deviceId } = req.body;
+    const shouldSign = req.body.shouldSign || false;
+
+    // Sign the data
+    let data = [ulid(), deviceId, sensorValue, new Date().toISOString()];
+
+    if (shouldSign) {
+      const signedData = await signReadingsWithLit(data.join(","));
+      data = [signedData, ...data];
+    }
 
     console.log(req.body);
 
     // Insert the record
-    const record = await db
-      .collection("SensorData")
-      .create([
-        "nasoubahsbas8ahd8ahsdasd",
-        deviceId,
-        sensorValue,
-        new Date().toISOString(),
-      ]);
+    const record = await db.collection("SensorData").create(data);
 
     res.status(200).json(record);
   } catch (error) {
@@ -104,6 +109,19 @@ router.get("/data", async (req, res) => {
     const records = await db.collection("SensorData").get();
 
     res.status(200).json(records);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("verify-sign", async (req, res) => {
+  try {
+    const { jwt } = req.body;
+
+    // verify the JWT
+    const verified = await verifySignature(jwt);
+    res.status(200).json(verified);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
