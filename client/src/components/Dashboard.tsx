@@ -174,7 +174,7 @@ const Dashboard = () => {
           </Text>
           <Divider marginBottom={'20px'} borderColor="gray.900" />
           <VStack spacing={2} align="stretch" padding="10px" borderRadius={'md'}>
-            {devices.length > 0 &&
+            {devices.length > 0 ? (
               devices.map((device) => (
                 <Grid
                   templateRows="repeat(2, 1fr)"
@@ -204,13 +204,53 @@ const Dashboard = () => {
                     </Text>
                   </GridItem>
                 </Grid>
-              ))}
+              ))
+            ) : (
+              <Text margin={'100px'}>No Devices Yet!</Text>
+            )}
           </VStack>
         </GridItem>
         <GridItem colSpan={2} rowSpan={4} bg="#141214" borderRadius={'md'} marginBottom={'20px'}>
           <Text fontSize="3xl" fontWeight={'bold'} margin={'20px'}>
             {'View Data'}
           </Text>
+          <Divider marginBottom={'20px'} borderColor="gray.900" />
+          <VStack spacing={2} align="stretch" padding="10px" borderRadius={'md'}>
+            {devices.length > 0 ? (
+              devices.map((device) => (
+                <Grid
+                  templateRows="repeat(2, 1fr)"
+                  templateColumns="repeat(4, 1fr)"
+                  as="button"
+                  h="120px"
+                  p="2"
+                  bg={'gray.800'}
+                  borderRadius={'md'}
+                  fontWeight={'medium'}
+                  textColor={'white'}
+                  _hover={{ bg: 'gray.200', textColor: 'black' }}
+
+                  // onClick={() => setSelected(org.id)}
+                >
+                  <GridItem colSpan={1} rowSpan={2}>
+                    <Image src="https://picsum.photos/100" alt={device.subscriber} />
+                  </GridItem>
+                  <GridItem colSpan={3} rowSpan={1} paddingTop="15px">
+                    <Text textAlign="start" fontWeight={'bold'}>
+                      {device.subscriber}
+                    </Text>
+                  </GridItem>
+                  <GridItem colSpan={3} rowSpan={1} paddingBottom="15px">
+                    <Text textAlign={'center'} fontWeight="normal">
+                      {device.deviceId}
+                    </Text>
+                  </GridItem>
+                </Grid>
+              ))
+            ) : (
+              <Text margin={'100px'}>No Data Yet!</Text>
+            )}
+          </VStack>
         </GridItem>
       </Grid>
       <CreateOrganisationModal
