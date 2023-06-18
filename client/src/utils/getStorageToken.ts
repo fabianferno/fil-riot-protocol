@@ -1,10 +1,7 @@
-export default async function getUploadToken(bucketName: string) {
+export default async function getUploadToken() {
   try {
     const response = await fetch('/api/initiate-upload', {
       method: 'GET',
-      body: JSON.stringify({
-        bucketName,
-      }),
       headers: {
         'Content-Type': 'application/json',
       },
