@@ -26,6 +26,7 @@ const CreateOrganisationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose
   const [symbol, setSymbol] = useState('');
   const [emoji, setEmoji] = useState('');
   const [description, setDescription] = useState('');
+  const [storedMetadataURI, setStoredMetadataURI] = useState('');
   const [fee, setFee] = useState(0);
   const [status, setStatus] = useState('');
   const closeNotification = () => {
@@ -117,20 +118,30 @@ const CreateOrganisationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose
                 variant="outline"
                 isDisabled={name == '' || symbol == '' || emoji == '' || description == ''}
                 onClick={async () => {
-                  setStatus('Uploading Metadata to IPFS with Spheron...');
-                  setShowNotification(true);
-                  let currentlyUploaded = 0;
-                  const storageToken = await getUploadToken();
-                  console.log('Received Storage Token');
-                  console.log(storageToken);
-                  const { cid } = await upload([convertObjectToFile({ name, symbol, emoji, description }, name)], {
-                    token: storageToken,
-                    onChunkUploaded(uploadedSize, totalSize) {
-                      currentlyUploaded += uploadedSize;
-                      console.log(`Uploaded ${currentlyUploaded} of ${totalSize} Bytes.`);
-                    },
-                  });
-                  let metadataUri = `https://ipfs.io/ipfs/${cid}`;
+                  let metadataUri;
+                  if (storedMetadataURI == '') {
+                    setStatus('Uploading Metadata to IPFS with Spheron...');
+                    setShowNotification(true);
+                    let currentlyUploaded = 0;
+                    const storageToken = await getUploadToken();
+                    console.log('Received Storage Token');
+                    console.log(storageToken);
+                    const { cid } = await upload(
+                      [convertObjectToFile({ name, symbol, emoji, description }, 'metadata.json')],
+                      {
+                        token: storageToken,
+                        onChunkUploaded(uploadedSize, totalSize) {
+                          currentlyUploaded += uploadedSize;
+                          console.log(`Uploaded ${currentlyUploaded} of ${totalSize} Bytes.`);
+                        },
+                      },
+                    );
+                    metadataUri = `https://ipfs.io/ipfs/${cid}/metadata.json`;
+                    setStoredMetadataURI(metadataUri);
+                  } else {
+                    metadataUri = storedMetadataURI;
+                  }
+
                   // let metadataUri = 'https://ipfs.io/ipfs/bafybeiflby3whlpmbxuvmobp7fqsrhrbhylpn2cxgvk3lfn4vsib5b3moq/';
                   setStatus('Waiting for Confirmation...');
 
