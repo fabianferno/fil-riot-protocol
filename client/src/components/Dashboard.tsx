@@ -11,6 +11,7 @@ import {
   VStack,
   Image,
 } from '@chakra-ui/react';
+import { faCropSimple } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CreateDeviceModal from './createDeviceModal';
@@ -63,15 +64,20 @@ const Dashboard = () => {
       );
       console.log(_organisations);
       if (_organisations.length > 0) {
-        const formattedOrganisations = _organisations.map((org, index) => ({
-          name: org.name,
-          id: (index + 1).toString(),
-          address: org.organisationContractAddress,
-          symbol: org.symbol,
-          metadata: org.metadata,
-          creator: org.creator,
-        }));
-
+        let formattedOrganisations = [];
+        for (let i = 0; i < _organisations.length; i++) {
+          const fetchedDescription = await fetch(_organisations[i].metadata + '/metadata.json');
+          const { description } = await fetchedDescription.json();
+          formattedOrganisations.push({
+            name: _organisations[i].name,
+            id: (i + 1).toString(),
+            address: _organisations[i].organisationContractAddress,
+            symbol: _organisations[i].symbol,
+            description: description,
+            creator: _organisations[i].creator,
+          });
+        }
+        console.log('Organisations: ', formattedOrganisations);
         setOrganisations(formattedOrganisations);
         setSelected('1');
         const _devices = await contractCall(
@@ -83,6 +89,7 @@ const Dashboard = () => {
           'getDevices()',
           true,
         );
+
         setDevices(_devices);
       }
     })();
@@ -167,36 +174,37 @@ const Dashboard = () => {
           </Text>
           <Divider marginBottom={'20px'} borderColor="gray.900" />
           <VStack spacing={2} align="stretch" padding="10px" borderRadius={'md'}>
-            {devices.map((device) => (
-              <Grid
-                templateRows="repeat(2, 1fr)"
-                templateColumns="repeat(4, 1fr)"
-                as="button"
-                h="120px"
-                p="2"
-                bg={'gray.800'}
-                borderRadius={'md'}
-                fontWeight={'medium'}
-                textColor={'white'}
-                _hover={{ bg: 'gray.200', textColor: 'black' }}
+            {devices.length > 0 &&
+              devices.map((device) => (
+                <Grid
+                  templateRows="repeat(2, 1fr)"
+                  templateColumns="repeat(4, 1fr)"
+                  as="button"
+                  h="120px"
+                  p="2"
+                  bg={'gray.800'}
+                  borderRadius={'md'}
+                  fontWeight={'medium'}
+                  textColor={'white'}
+                  _hover={{ bg: 'gray.200', textColor: 'black' }}
 
-                // onClick={() => setSelected(org.id)}
-              >
-                <GridItem colSpan={1} rowSpan={2}>
-                  <Image src="https://picsum.photos/100" alt={device.subscriber} />
-                </GridItem>
-                <GridItem colSpan={3} rowSpan={1} paddingTop="15px">
-                  <Text textAlign="start" fontWeight={'bold'}>
-                    {device.subscriber}
-                  </Text>
-                </GridItem>
-                <GridItem colSpan={3} rowSpan={1} paddingBottom="15px">
-                  <Text textAlign={'center'} fontWeight="normal">
-                    {device.deviceId}
-                  </Text>
-                </GridItem>
-              </Grid>
-            ))}
+                  // onClick={() => setSelected(org.id)}
+                >
+                  <GridItem colSpan={1} rowSpan={2}>
+                    <Image src="https://picsum.photos/100" alt={device.subscriber} />
+                  </GridItem>
+                  <GridItem colSpan={3} rowSpan={1} paddingTop="15px">
+                    <Text textAlign="start" fontWeight={'bold'}>
+                      {device.subscriber}
+                    </Text>
+                  </GridItem>
+                  <GridItem colSpan={3} rowSpan={1} paddingBottom="15px">
+                    <Text textAlign={'center'} fontWeight="normal">
+                      {device.deviceId}
+                    </Text>
+                  </GridItem>
+                </Grid>
+              ))}
           </VStack>
         </GridItem>
         <GridItem colSpan={2} rowSpan={4} bg="#141214" borderRadius={'md'} marginBottom={'20px'}>
