@@ -12,9 +12,6 @@ import {
   Image,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { SpheronClient, ProtocolEnum } from '@spheron/storage';
-import { upload } from '@spheron/browser-upload';
-import { convertObjectToFile, getUploadToken } from '../utils';
 import CreateOrganisationModal from './createOrganisationModal';
 
 const Dashboard = () => {
@@ -119,12 +116,6 @@ const Dashboard = () => {
   const [selected, setSelected] = useState('1');
   const [uploadToken, setUploadToken] = useState(null);
   const [showCreateOrganisation, setShowCreateOrganisation] = useState(false);
-  useEffect(() => {
-    (async () => {
-      const token = await getUploadToken('blitzcrafthq');
-      setUploadToken(token);
-    })();
-  }, []);
 
   return (
     <>

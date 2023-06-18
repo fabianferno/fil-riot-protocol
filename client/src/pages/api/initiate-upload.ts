@@ -3,15 +3,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { bucketName } = req.body;
-
     const protocol = ProtocolEnum.IPFS; // use your preferred protocol
     const token = process.env.NEXT_PUBLIC_SPHERON_STORAGE_TOKEN; // add your access token in .env or paste it here
 
     const client = new SpheronClient({ token: token ? token : '' });
 
     const { uploadToken } = await client.createSingleUploadToken({
-      name: bucketName,
+      name: 'the-riot-protocol',
       protocol,
     });
 

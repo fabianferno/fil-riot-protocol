@@ -14,8 +14,10 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { protocolABI, protocolAddress } from './metamask/lib/constants';
+import { convertObjectToFile, getUploadToken } from 'utils';
+import { clientAddress, protocolABI, protocolAddress } from './metamask/lib/constants';
 import contractCall from './metamask/lib/contract-call';
+import { upload } from '@spheron/browser-upload';
 
 const CreateOrganisationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const { currentAccount } = useSelector((state: any) => state.metamask);
@@ -116,12 +118,23 @@ const CreateOrganisationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose
                 onClick={async () => {
                   setStatus('Waiting for Confirmation...');
                   setShowNotification(true);
-
+                  let currentlyUploaded = 0;
+                  const storageToken = await getUploadToken();
+                  console.log('Received Storage Token');
+                  console.log(storageToken);
+                  const { cid } = await upload([convertObjectToFile({ name, symbol, emoji, description }, name)], {
+                    token: storageToken,
+                    onChunkUploaded(uploadedSize, totalSize) {
+                      currentlyUploaded += uploadedSize;
+                      console.log(`Uploaded ${currentlyUploaded} of ${totalSize} Bytes.`);
+                    },
+                  });
+                  let metadataUri = `https://ipfs.io/ipfs/${cid}`;
                   let response = await contractCall(
                     protocolAddress,
                     currentAccount,
                     protocolABI,
-                    [name, symbol, emoji, description],
+                    [name, symbol, metadataUri, clientAddress],
                     0,
                     'registerOrganisation(string,string,string,address)',
                     false,
