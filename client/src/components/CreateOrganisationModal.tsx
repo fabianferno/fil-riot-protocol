@@ -37,7 +37,8 @@ const CreateOrganisationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose
       let responseFee = await contractCall(protocolAddress, currentAccount, protocolABI, [], 0, 'getCreateFee()', true);
       setFee(parseInt(responseFee.toString()));
     });
-  });
+  }, []);
+
   return (
     <div className={`fixed inset-0 flex items-center justify-center z-50 ${isOpen ? 'visible' : 'hidden'}`}>
       <div className="fixed inset-0 bg-gray-500 opacity-30"></div>
@@ -119,17 +120,18 @@ const CreateOrganisationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose
                   setStatus('Waiting for Confirmation...');
                   setShowNotification(true);
                   let currentlyUploaded = 0;
-                  const storageToken = await getUploadToken();
-                  console.log('Received Storage Token');
-                  console.log(storageToken);
-                  const { cid } = await upload([convertObjectToFile({ name, symbol, emoji, description }, name)], {
-                    token: storageToken,
-                    onChunkUploaded(uploadedSize, totalSize) {
-                      currentlyUploaded += uploadedSize;
-                      console.log(`Uploaded ${currentlyUploaded} of ${totalSize} Bytes.`);
-                    },
-                  });
-                  let metadataUri = `https://ipfs.io/ipfs/${cid}`;
+                  // const storageToken = await getUploadToken();
+                  // console.log('Received Storage Token');
+                  // console.log(storageToken);
+                  // const { cid } = await upload([convertObjectToFile({ name, symbol, emoji, description }, name)], {
+                  //   token: storageToken,
+                  //   onChunkUploaded(uploadedSize, totalSize) {
+                  //     currentlyUploaded += uploadedSize;
+                  //     console.log(`Uploaded ${currentlyUploaded} of ${totalSize} Bytes.`);
+                  //   },
+                  // });
+                  // let metadataUri = `https://ipfs.io/ipfs/${cid}`;
+                  let metadataUri = 'https://ipfs.io/ipfs/bafybeiflby3whlpmbxuvmobp7fqsrhrbhylpn2cxgvk3lfn4vsib5b3moq/';
                   let response = await contractCall(
                     protocolAddress,
                     currentAccount,

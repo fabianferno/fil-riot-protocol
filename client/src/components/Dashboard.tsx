@@ -12,111 +12,57 @@ import {
   Image,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import CreateOrganisationModal from './createOrganisationModal';
+import { organisationABI, protocolABI, protocolAddress } from './metamask/lib/constants';
+import contractCall from './metamask/lib/contract-call';
 
 const Dashboard = () => {
-  const organisations = [
-    {
-      name: 'BlitzCraftHQ',
-      id: '1',
-      address: '0x1234567890123456789012345678901234567890',
-      devices: [
-        {
-          name: 'Fan',
-          id: '1',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Hall Lights',
-          id: '2',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Bedroom Lights',
-          id: '3',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-      ],
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor mattis tortor, at venenatis sapien blandit ut. Aenean eget risus et justo tempor viverra. Nullam id dictum augue. Proin tristique nisi nec nunc facilisis, ac convallis odio dapibus. Vestibulum consectetur aliquam lacus ac consequat.',
-    },
-    {
-      name: 'Niggga Assocation',
-      id: '2',
-      devices: [
-        {
-          name: 'Fan',
-          id: '1',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Hall Lights',
-          id: '2',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Bedroom Lights',
-          id: '3',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-      ],
-      address: '0x1234567890123456789012345678901234567890',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor mattis tortor, at venenatis sapien blandit ut. Aenean eget risus et justo tempor viverra. Nullam id dictum augue. Proin tristique nisi nec nunc facilisis, ac convallis odio dapibus. Vestibulum consectetur aliquam lacus ac consequat.',
-    },
-    {
-      name: 'Lana Fan Club',
-      id: '3',
-      devices: [
-        {
-          name: 'Fan',
-          id: '1',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Hall Lights',
-          id: '2',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Bedroom Lights',
-          id: '3',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-      ],
-      address: '0x1234567890123456789012345678901234567890',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor mattis tortor, at venenatis sapien blandit ut. Aenean eget risus et justo tempor viverra. Nullam id dictum augue. Proin tristique nisi nec nunc facilisis, ac convallis odio dapibus. Vestibulum consectetur aliquam lacus ac consequat.',
-    },
-    {
-      name: 'What!s up  1',
-      id: '4',
-      devices: [
-        {
-          name: 'Fan',
-          id: '1',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Hall Lights',
-          id: '2',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Bedroom Lights',
-          id: '3',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-      ],
-      address: '0x1234567890123456789012345678901234567890',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor mattis tortor, at venenatis sapien blandit ut. Aenean eget risus et justo tempor viverra. Nullam id dictum augue. Proin tristique nisi nec nunc facilisis, ac convallis odio dapibus. Vestibulum consectetur aliquam lacus ac consequat.',
-    },
-  ];
+  const { currentAccount } = useSelector((state: any) => state.metamask);
+
   const [selected, setSelected] = useState('1');
   const [uploadToken, setUploadToken] = useState(null);
   const [showCreateOrganisation, setShowCreateOrganisation] = useState(false);
+  const [organisations, setOrganisations] = useState([]);
+  const [devices, setDevices] = useState([]);
 
+  useEffect(() => {}, [selected]);
+  useEffect(() => {
+    (async function () {
+      const _organisations = await contractCall(
+        protocolAddress,
+        currentAccount,
+        protocolABI,
+        [],
+        0,
+        'getOrganisations()',
+        true,
+      );
+      console.log(_organisations);
+      if (_organisations.length > 0) {
+        const formattedOrganisations = _organisations.map((org, index) => ({
+          name: org.name,
+          id: (index + 1).toString(),
+          address: org.organisationContractAddress,
+          symbol: org.symbol,
+          creator: org.creator,
+        }));
+
+        setOrganisations(formattedOrganisations);
+        setSelected('1');
+        const _devices = await contractCall(
+          formattedOrganisations[0].address,
+          currentAccount,
+          organisationABI,
+          [],
+          0,
+          'getDevices()',
+          true,
+        );
+        setDevices(_devices);
+      }
+    })();
+  });
   return (
     <>
       <Box fontSize="3xl" fontWeight={'bold'} marginBottom={'20px'}>
