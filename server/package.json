@@ -32,7 +32,7 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
-    "ethers": "6.6.0",
+    "ethers": "5.4.0",
     "express": "^4.17.1",
     "helmet": "^4.6.0",
     "http-status": "^1.2.0",
