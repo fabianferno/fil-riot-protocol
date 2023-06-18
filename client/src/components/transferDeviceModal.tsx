@@ -20,12 +20,12 @@ import { organisationABI } from './metamask/lib/constants';
 import contractCall from './metamask/lib/contract-call';
 
 const TransferDeviceModal = ({
-  tokenId,
+  deviceId,
   organisationContractAddress,
   isOpen,
   onClose,
 }: {
-  tokenId: string;
+  deviceId: string;
   organisationContractAddress: string;
   isOpen: boolean;
   onClose: () => void;
@@ -78,9 +78,9 @@ const TransferDeviceModal = ({
                     organisationContractAddress,
                     currentAccount,
                     organisationABI,
-                    [tokenId, subscriber],
+                    [deviceId, subscriber],
                     0,
-                    'setSubscriberAddress(uint,address)',
+                    'setSubscriberAddress(address,address,bytes32)',
                     false,
                   );
                   if (response == 'Execution Complete') {
