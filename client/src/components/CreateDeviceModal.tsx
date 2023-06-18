@@ -24,7 +24,8 @@ import contractCall from './metamask/lib/contract-call';
 import getIsDeviceIdMinted from 'utils/getIsDeviceMinted';
 import { getEllipsisTxt } from 'utils/format';
 import getSessionSalt from 'utils/getSessionSalt';
-import { getUploadToken } from 'utils';
+import { convertObjectToFile, getUploadToken } from 'utils';
+import { upload } from '@spheron/browser-upload';
 
 const CreateDeviceModal = ({
   isOpen,
@@ -290,7 +291,6 @@ const CreateDeviceModal = ({
                   let metadataHash;
                   try {
                     const storageToken = await getUploadToken();
-
                     const metadataObject = {
                       name: 'Riot Association',
                       symbol: 'RA',
@@ -303,10 +303,17 @@ const CreateDeviceModal = ({
                       image: riotDeviceImages[Math.floor(Math.random() * riotDeviceImages.length)],
                       deviceDataHash: deviceDataHash,
                     };
-                    const data = await response.json();
-                    const { hash } = data;
-                    metadataHash = hash.url;
-                    console.log('IPFS Hash of the deployed Riot NFT: ' + hash);
+                    let currentlyUploaded = 0;
+                    const { cid } = await upload([convertObjectToFile(metadataObject, 'metadata.json')], {
+                      token: storageToken,
+                      onChunkUploaded(uploadedSize, totalSize) {
+                        currentlyUploaded += uploadedSize;
+                        console.log(`Uploaded ${currentlyUploaded} of ${totalSize} Bytes.`);
+                      },
+                    });
+
+                    metadataHash = `https://ipfs.io/ipfs/${cid}/metadata.json`;
+                    console.log('IPFS Hash of the deployed Riot NFT: ' + metadataHash);
                   } catch (e) {
                     console.log(e);
                   }
