@@ -37,7 +37,8 @@ const CreateOrganisationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose
       let responseFee = await contractCall(protocolAddress, currentAccount, protocolABI, [], 0, 'getCreateFee()', true);
       setFee(parseInt(responseFee.toString()));
     });
-  });
+  }, []);
+
   return (
     <div className={`fixed inset-0 flex items-center justify-center z-50 ${isOpen ? 'visible' : 'hidden'}`}>
       <div className="fixed inset-0 bg-gray-500 opacity-30"></div>
@@ -116,7 +117,7 @@ const CreateOrganisationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose
                 variant="outline"
                 isDisabled={name == '' || symbol == '' || emoji == '' || description == ''}
                 onClick={async () => {
-                  setStatus('Waiting for Confirmation...');
+                  setStatus('Uploading Metadata to IPFS with Spheron...');
                   setShowNotification(true);
                   let currentlyUploaded = 0;
                   const storageToken = await getUploadToken();
@@ -130,6 +131,9 @@ const CreateOrganisationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose
                     },
                   });
                   let metadataUri = `https://ipfs.io/ipfs/${cid}`;
+                  // let metadataUri = 'https://ipfs.io/ipfs/bafybeiflby3whlpmbxuvmobp7fqsrhrbhylpn2cxgvk3lfn4vsib5b3moq/';
+                  setStatus('Waiting for Confirmation...');
+
                   let response = await contractCall(
                     protocolAddress,
                     currentAccount,

@@ -1,6 +1,10 @@
 const RIOT_RPC_URL = process.env.RIOT_RPC_URL || 'https://riot-rpc-server.adaptable.app';
-
-const protocolAddress = '0xb3aaff32d70a2729a393578c3208256827c278b6';
+const riotDeviceImages = [
+  // 'https://bafkreidmkpibpkguvrnzuqgmudacxji4fl6g437wrtb74t5uliqihuhede.ipfs.nftstorage.link/',
+  // 'https://bafkreibufkhlr6kaq4mhb4tpczbwtzm7jx2q7nrnwed2ndk6klrv6da54u.ipfs.nftstorage.link/',
+  'https://bafybeice6wite46sx5ztubkuafmxhjmacq6iivhlvl23fokf6ql3mqwc44.ipfs.nftstorage.link/',
+];
+const protocolAddress = '0x0AE7d655Cda406c5b73Ea76855e2cE6aC3812a8E';
 const protocolABI = [
   {
     inputs: [
@@ -208,7 +212,7 @@ const protocolABI = [
     type: 'function',
   },
 ];
-const clientAddress = '0x8985355C081a77fBa7DCfA0b539830bAc7B22768';
+const clientAddress = '0x1f895309544911B2cF852Eb1cC1dddcB6E6CC248';
 const clientABI = [
   {
     inputs: [
@@ -1430,6 +1434,61 @@ const organisationABI = [
   },
   {
     inputs: [],
+    name: 'getDevices',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'tokenId',
+            type: 'uint256',
+          },
+          {
+            internalType: 'address',
+            name: 'deviceId',
+            type: 'address',
+          },
+          {
+            internalType: 'bytes32',
+            name: 'firmwareHash',
+            type: 'bytes32',
+          },
+          {
+            internalType: 'bytes32',
+            name: 'deviceDataHash',
+            type: 'bytes32',
+          },
+          {
+            internalType: 'bytes32',
+            name: 'deviceGroupIdHash',
+            type: 'bytes32',
+          },
+          {
+            internalType: 'address',
+            name: 'subscriber',
+            type: 'address',
+          },
+          {
+            internalType: 'bytes32',
+            name: 'sessionSalt',
+            type: 'bytes32',
+          },
+          {
+            internalType: 'bool',
+            name: 'exists',
+            type: 'bool',
+          },
+        ],
+        internalType: 'struct RiotOrganisation.Device[]',
+        name: '',
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'getDevicesCount',
     outputs: [
       {
@@ -1846,4 +1905,13 @@ const chains = [
     blockExplorer: 'https://fvm.starboard.ventures/calibration/explorer/',
   },
 ];
-export { protocolAddress, protocolABI, clientAddress, clientABI, organisationABI, chains, RIOT_RPC_URL };
+export {
+  riotDeviceImages,
+  protocolAddress,
+  protocolABI,
+  clientAddress,
+  clientABI,
+  organisationABI,
+  chains,
+  RIOT_RPC_URL,
+};

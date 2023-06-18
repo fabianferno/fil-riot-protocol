@@ -6,10 +6,7 @@ async function getIsGroupRegistered(
   ABI: any,
   hash: any,
   setButtonText: any,
-  chainId: any,
 ) {
-  console.log('CHAIN ID!!!!', chainId);
-  if (chainId == 80001) return;
   if (hash != '') {
     const isRegistered = await contractCall(
       contractAddress,

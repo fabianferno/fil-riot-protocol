@@ -12,111 +12,81 @@ import {
   Image,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import CreateDeviceModal from './createDeviceModal';
 import CreateOrganisationModal from './createOrganisationModal';
+import { organisationABI, protocolABI, protocolAddress } from './metamask/lib/constants';
+import contractCall from './metamask/lib/contract-call';
 
 const Dashboard = () => {
-  const organisations = [
-    {
-      name: 'BlitzCraftHQ',
-      id: '1',
-      address: '0x1234567890123456789012345678901234567890',
-      devices: [
-        {
-          name: 'Fan',
-          id: '1',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Hall Lights',
-          id: '2',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Bedroom Lights',
-          id: '3',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-      ],
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor mattis tortor, at venenatis sapien blandit ut. Aenean eget risus et justo tempor viverra. Nullam id dictum augue. Proin tristique nisi nec nunc facilisis, ac convallis odio dapibus. Vestibulum consectetur aliquam lacus ac consequat.',
-    },
-    {
-      name: 'Niggga Assocation',
-      id: '2',
-      devices: [
-        {
-          name: 'Fan',
-          id: '1',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Hall Lights',
-          id: '2',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Bedroom Lights',
-          id: '3',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-      ],
-      address: '0x1234567890123456789012345678901234567890',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor mattis tortor, at venenatis sapien blandit ut. Aenean eget risus et justo tempor viverra. Nullam id dictum augue. Proin tristique nisi nec nunc facilisis, ac convallis odio dapibus. Vestibulum consectetur aliquam lacus ac consequat.',
-    },
-    {
-      name: 'Lana Fan Club',
-      id: '3',
-      devices: [
-        {
-          name: 'Fan',
-          id: '1',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Hall Lights',
-          id: '2',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Bedroom Lights',
-          id: '3',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-      ],
-      address: '0x1234567890123456789012345678901234567890',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor mattis tortor, at venenatis sapien blandit ut. Aenean eget risus et justo tempor viverra. Nullam id dictum augue. Proin tristique nisi nec nunc facilisis, ac convallis odio dapibus. Vestibulum consectetur aliquam lacus ac consequat.',
-    },
-    {
-      name: 'What!s up  1',
-      id: '4',
-      devices: [
-        {
-          name: 'Fan',
-          id: '1',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Hall Lights',
-          id: '2',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-        {
-          name: 'Bedroom Lights',
-          id: '3',
-          address: '0x1234567890123456789012345678901234567890',
-        },
-      ],
-      address: '0x1234567890123456789012345678901234567890',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor mattis tortor, at venenatis sapien blandit ut. Aenean eget risus et justo tempor viverra. Nullam id dictum augue. Proin tristique nisi nec nunc facilisis, ac convallis odio dapibus. Vestibulum consectetur aliquam lacus ac consequat.',
-    },
-  ];
-  const [selected, setSelected] = useState('1');
+  const { currentAccount } = useSelector((state: any) => state.metamask);
+
+  const [selected, setSelected] = useState('0');
   const [uploadToken, setUploadToken] = useState(null);
   const [showCreateOrganisation, setShowCreateOrganisation] = useState(false);
+  const [showCreateDeviceModal, setShowCreateDeviceModal] = useState(false);
+  const [organisations, setOrganisations] = useState([]);
+  const [devices, setDevices] = useState([]);
 
+  useEffect(() => {
+    (async function () {
+      if (selected != '0') {
+        const _devices = await contractCall(
+          organisations[parseInt(selected) - 1].address,
+          currentAccount,
+          organisationABI,
+          [],
+          0,
+          'getDevices()',
+          true,
+        );
+        setDevices(_devices);
+        let modifiedOrganisations = organisations.map((org: Object, index) => {
+          if (index == parseInt(selected) - 1) {
+            return { ...org, description: 'This is so awesome!' };
+          }
+          return org;
+        });
+      }
+    })();
+  }, [selected]);
+  useEffect(() => {
+    (async function () {
+      const _organisations = await contractCall(
+        protocolAddress,
+        currentAccount,
+        protocolABI,
+        [],
+        0,
+        'getOrganisations()',
+        true,
+      );
+      console.log(_organisations);
+      if (_organisations.length > 0) {
+        const formattedOrganisations = _organisations.map((org, index) => ({
+          name: org.name,
+          id: (index + 1).toString(),
+          address: org.organisationContractAddress,
+          symbol: org.symbol,
+          metadata: org.metadata,
+          creator: org.creator,
+        }));
+
+        setOrganisations(formattedOrganisations);
+        setSelected('1');
+        const _devices = await contractCall(
+          formattedOrganisations[0].address,
+          currentAccount,
+          organisationABI,
+          [],
+          0,
+          'getDevices()',
+          true,
+        );
+        setDevices(_devices);
+      }
+    })();
+  }, []);
   return (
     <>
       <Box fontSize="3xl" fontWeight={'bold'} marginBottom={'20px'}>
@@ -146,7 +116,7 @@ const Dashboard = () => {
                 justifyContent={'center'}
                 onClick={() => setSelected(org.id)}
               >
-                {org.name}
+                {`${org.name} | ${org.symbol}`}
               </Box>
             ))}
             <Box
@@ -170,16 +140,25 @@ const Dashboard = () => {
             </Box>
           </VStack>
         </GridItem>
-        <GridItem h="200px" colSpan={4} rowSpan={1} bg="#141214" borderRadius={'md'} marginBottom={'20px'}>
+        <GridItem h="200px" colSpan={4} rowSpan={1} bg="#141214" bo rderRadius={'md'} marginBottom={'20px'}>
           <Flex>
             <Text fontSize="3xl" fontWeight={'bold'} margin={'20px'}>
-              {organisations[parseInt(selected) - 1].name}
+              {selected != '0' &&
+                `${organisations[parseInt(selected) - 1].name} | ${organisations[parseInt(selected) - 1].symbol}`}
             </Text>
             <Spacer />
-            <Button margin={'20px'}>➕ Create Device</Button>
+            <Button
+              margin={'20px'}
+              disabled={selected == '0'}
+              onClick={() => {
+                setShowCreateDeviceModal(true);
+              }}
+            >
+              ➕ Create Device
+            </Button>
           </Flex>
           <Divider marginBottom={'20px'} borderColor="gray.900" />
-          <Text margin={'20px'}>{organisations[parseInt(selected) - 1].description}</Text>
+          <Text margin={'20px'}>{selected != '0' && organisations[parseInt(selected) - 1].description}</Text>
         </GridItem>
 
         <GridItem colSpan={2} rowSpan={4} bg="#141214" borderRadius={'md'} marginBottom={'20px'}>
@@ -188,7 +167,7 @@ const Dashboard = () => {
           </Text>
           <Divider marginBottom={'20px'} borderColor="gray.900" />
           <VStack spacing={2} align="stretch" padding="10px" borderRadius={'md'}>
-            {organisations[parseInt(selected) - 1].devices.map((device) => (
+            {devices.map((device) => (
               <Grid
                 templateRows="repeat(2, 1fr)"
                 templateColumns="repeat(4, 1fr)"
@@ -204,16 +183,16 @@ const Dashboard = () => {
                 // onClick={() => setSelected(org.id)}
               >
                 <GridItem colSpan={1} rowSpan={2}>
-                  <Image src="https://picsum.photos/100" alt={device.name} />
+                  <Image src="https://picsum.photos/100" alt={device.subscriber} />
                 </GridItem>
                 <GridItem colSpan={3} rowSpan={1} paddingTop="15px">
                   <Text textAlign="start" fontWeight={'bold'}>
-                    {device.name}
+                    {device.subscriber}
                   </Text>
                 </GridItem>
                 <GridItem colSpan={3} rowSpan={1} paddingBottom="15px">
                   <Text textAlign={'center'} fontWeight="normal">
-                    {device.address}
+                    {device.deviceId}
                   </Text>
                 </GridItem>
               </Grid>
@@ -232,6 +211,15 @@ const Dashboard = () => {
           setShowCreateOrganisation(false);
         }}
       />
+      {organisations.length > 0 && (
+        <CreateDeviceModal
+          isOpen={showCreateDeviceModal}
+          onClose={() => {
+            setShowCreateDeviceModal(false);
+          }}
+          organisationAddress={organisations[parseInt(selected) - 1].address}
+        />
+      )}
     </>
   );
 };
