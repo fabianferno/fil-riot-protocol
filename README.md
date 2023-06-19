@@ -8,7 +8,9 @@ Networks are highly prone to trojan devices that piggyback into the so-called sm
 
 A single protocol that ensures device authentication, authorization and manages the data layer is a much needed technology of the hour.
 
-![image](https://github.com/fabianferno/the-riot-protocol/assets/57835412/9ce746af-ca05-4c0f-aa81-5a18afbd9a85)
+![riot](https://github.com/fabianferno/fil-riot-protocol/assets/57835412/49c1529e-1cee-4c56-945e-2a5a8555b9ff)
+
+
 ### What is RioT?
 
 The Internet of Things (IoT) has seen widespread adoption in recent years, connecting numerous devices to the internet. However, current IoT networks are vulnerable to various security threats such as data breaches, unauthorized access, and cyber-attacks. To address these security challenges, we propose the Riot protocol - a comprehensive solution for securing IoT networks by providing device authentication, data encryption, decentralized key generation, scalability, and more with cryptographic wallet-based authentication. This protocol ensures the confidentiality, integrity, and authenticity of the data exchanged between IoT devices (publishers) or users (subscribers). The Riot protocol aims to provide a secure and reliable communication between devices, offering an extensive solution to the challenges of IoT security using blockchain technology.
@@ -55,15 +57,6 @@ The platform has a cross-chain infrastructure that lets you secure devices on tw
 <img width="824" alt="image" src="https://github.com/fabianferno/the-riot-protocol/assets/57835412/707812cb-cbce-4775-aaa4-bcaae39c7621">
 <img width="938" alt="image" src="https://github.com/fabianferno/the-riot-protocol/assets/57835412/6493af00-4392-4981-b25a-6f75bfef1b3a">
 <img width="881" alt="image" src="https://github.com/fabianferno/the-riot-protocol/assets/57835412/8cd72e2e-0a7c-4a1d-9b4e-27acfbf8234b">
-
-
-### Tracks applied
-- Application Layer Track
-- Tooling & Public Goods Track 
-- zkEVM Tooling Track
-- Specific Problem Statements Track: (Open Track)
-- Newman Capital
-- Luniverse (Luniverse NOVA's multichain API)
 
 
 #### BUIDLERS
