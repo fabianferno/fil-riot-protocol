@@ -1,4 +1,4 @@
-# THE RIOT PROTOCOL: A Decentralized IOT Security Gateway
+![Screenshot 2023-06-19 135351](https://github.com/fabianferno/fil-riot-protocol/assets/79229998/6235886a-d0ec-4b07-9e58-6dc0a26a5531)# THE RIOT PROTOCOL: A Decentralized IOT Security Gateway
 ----
 
 ### The Problem
@@ -20,7 +20,7 @@ With decentralized key generation, the Riot protocol ensures that cryptographic 
 #### Authentication & Encryption:
 The Riot protocol provides robust device authentication and data encryption mechanisms to secure the communication between IoT devices and users.
 
-<img width="1165" alt="image" src="https://github.com/fabianferno/the-riot-protocol/assets/57835412/ad3f5a73-a174-42ef-b16d-2cfaa0dc2aae">
+![projects_3yuy5_images_saa](https://github.com/fabianferno/fil-riot-protocol/assets/79229998/eb04cffb-b113-4184-ae8a-8ac66a9ab2fd)
 
 #### Decentralized Key Generation
 With decentralized key generation, the Riot protocol ensures that cryptographic keys are generated securely and distributed in a decentralized manner.
@@ -51,12 +51,11 @@ The platform has a cross-chain infrastructure that lets you secure devices on tw
     The encryption/decryption module is responsible for securing the IoT sensor data before it is stored in the data storage microservice. Fernet symmetric encryption is used for encryption, which provides a high level of security and speed.
 
 ### Screenshots
-<img width="1046" alt="image" src="https://github.com/fabianferno/the-riot-protocol/assets/57835412/19bdd684-aafb-4265-b848-625aae86afde">
-<img width="1017" alt="image" src="https://github.com/fabianferno/the-riot-protocol/assets/57835412/adb93969-8bd8-4b49-bb12-3a9ace393a02">
-<img width="1034" alt="image" src="https://github.com/fabianferno/the-riot-protocol/assets/57835412/41755028-cbd6-4b66-ad7f-221a6ffb917a">
-<img width="824" alt="image" src="https://github.com/fabianferno/the-riot-protocol/assets/57835412/707812cb-cbce-4775-aaa4-bcaae39c7621">
-<img width="938" alt="image" src="https://github.com/fabianferno/the-riot-protocol/assets/57835412/6493af00-4392-4981-b25a-6f75bfef1b3a">
-<img width="881" alt="image" src="https://github.com/fabianferno/the-riot-protocol/assets/57835412/8cd72e2e-0a7c-4a1d-9b4e-27acfbf8234b">
+
+![projects_3yuy5_images_saccccc](https://github.com/fabianferno/fil-riot-protocol/assets/79229998/ec1cbc0c-4faa-4d44-b991-8b9b107957da)
+![projects_3yuy5_images_saa](https://github.com/fabianferno/fil-riot-protocol/assets/79229998/ccf48d7d-2ac0-4912-ad26-96360c5250e9)
+![projects_3yuy5_images_asscass](https://github.com/fabianferno/fil-riot-protocol/assets/79229998/67b70007-6e46-4fda-b714-529c8b38a5db)
+![Screenshot 2023-06-19 135351](https://github.com/fabianferno/fil-riot-protocol/assets/79229998/6d502f38-6db0-4120-8916-e23d859ff352)
 
 
 #### BUIDLERS
