@@ -18,7 +18,7 @@ import CreateOrganisationModal from './CreateOrganisationModal';
 import { organisationABI, protocolABI, protocolAddress } from './metamask/lib/constants';
 import contractCall from './metamask/lib/contract-call';
 import ViewData from '../pages/view-data';
-import TransferDeviceModal from './TransferDeviceModal';
+import TransferDeviceModal from './transferDeviceModal';
 
 const Dashboard = () => {
   const [showTransfersModal, setShowTransfersModal] = useState(false);
