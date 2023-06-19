@@ -1,4 +1,7 @@
-![Screenshot 2023-06-19 135351](https://github.com/fabianferno/fil-riot-protocol/assets/79229998/6235886a-d0ec-4b07-9e58-6dc0a26a5531)# THE RIOT PROTOCOL: A Decentralized IOT Security Gateway
+
+![swasasasasasxxxxxxxxxxxx](https://github.com/fabianferno/fil-riot-protocol/assets/79229998/d5e3ddd6-df38-43ed-911a-866b00a63709)
+
+# THE RIOT PROTOCOL: A Decentralized IOT Security Gateway
 ----
 
 ### The Problem
