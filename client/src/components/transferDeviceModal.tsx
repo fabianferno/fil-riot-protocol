@@ -1,4 +1,4 @@
-import { ArrowDownIcon } from '@chakra-ui/icons';
+import getSessionSalt from 'utils/getSessionSalt';
 import {
   Alert,
   AlertIcon,
@@ -33,6 +33,7 @@ const TransferDeviceModal = ({
   const { currentAccount } = useSelector((state: any) => state.metamask);
   const [showNotification, setShowNotification] = useState(false);
   const [subscriber, setSubscriber] = useState('');
+
   const [status, setStatus] = useState('');
   const closeNotification = () => {
     setShowNotification(false);
@@ -74,11 +75,12 @@ const TransferDeviceModal = ({
                 onClick={async () => {
                   setStatus('Waiting for Confirmation...');
                   setShowNotification(true);
+                  const { randomness } = await getSessionSalt();
                   let response = await contractCall(
                     organisationContractAddress,
                     currentAccount,
                     organisationABI,
-                    [deviceId, subscriber],
+                    [deviceId, subscriber, '0x' + randomness],
                     0,
                     'setSubscriberAddress(address,address,bytes32)',
                     false,

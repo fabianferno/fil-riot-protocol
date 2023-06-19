@@ -11,19 +11,18 @@ import {
   VStack,
   Image,
 } from '@chakra-ui/react';
-import { faCropSimple } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import CreateDeviceModal from './createDeviceModal';
-import CreateOrganisationModal from './createOrganisationModal';
+import CreateDeviceModal from './CreateDeviceModal';
+import CreateOrganisationModal from './CreateOrganisationModal';
 import { organisationABI, protocolABI, protocolAddress } from './metamask/lib/constants';
 import contractCall from './metamask/lib/contract-call';
 import ViewData from '../pages/view-data';
-import TransferDeviceModal from '../components/transferDeviceModal';
+import TransferDeviceModal from './TransferDeviceModal';
 
 const Dashboard = () => {
   const [showTransfersModal, setShowTransfersModal] = useState(false);
-  const [selectedDevice, setSelectedDevice] = useState(null);
+  const [selectedDevice, setSelectedDevice] = useState<any>(null);
 
   const { currentAccount } = useSelector((state: any) => state.metamask);
 
@@ -31,14 +30,14 @@ const Dashboard = () => {
   const [uploadToken, setUploadToken] = useState(null);
   const [showCreateOrganisation, setShowCreateOrganisation] = useState(false);
   const [showCreateDeviceModal, setShowCreateDeviceModal] = useState(false);
-  const [organisations, setOrganisations] = useState([]);
+  const [organisations, setOrganisations] = useState<any>([]);
   const [devices, setDevices] = useState([]);
 
   useEffect(() => {
     (async function () {
       if (selected != '0') {
         const _devices = await contractCall(
-          organisations[parseInt(selected) - 1].address,
+          organisations[parseInt(selected) - 1]?.address,
           currentAccount,
           organisationABI,
           [],
@@ -47,7 +46,7 @@ const Dashboard = () => {
           true,
         );
         setDevices(_devices);
-        let modifiedOrganisations = organisations.map((org: Object, index) => {
+        let modifiedOrganisations = organisations.map((org: Object, index: number) => {
           if (index == parseInt(selected) - 1) {
             return { ...org, description: 'This is so awesome!' };
           }
@@ -69,7 +68,7 @@ const Dashboard = () => {
       );
       console.log(_organisations);
       if (_organisations.length > 0) {
-        let formattedOrganisations = [];
+        let formattedOrganisations: any = [];
         for (let i = 0; i < _organisations.length; i++) {
           // const fetchedDescription = await fetch(_organisations[i].metadata + '/metadata.json');
           // const { description } = await fetchedDescription.json();
@@ -86,7 +85,7 @@ const Dashboard = () => {
         setOrganisations(formattedOrganisations);
         setSelected('1');
         const _devices = await contractCall(
-          formattedOrganisations[0].address,
+          formattedOrganisations[0]?.address,
           currentAccount,
           organisationABI,
           [],
@@ -114,7 +113,7 @@ const Dashboard = () => {
             padding="10px"
             borderRadius={'md'}
           >
-            {organisations.map((org) => (
+            {organisations.map((org: any) => (
               <Box
                 as="button"
                 h="40px"
@@ -152,7 +151,7 @@ const Dashboard = () => {
             </Box>
           </VStack>
         </GridItem>
-        <GridItem h="200px" colSpan={4} rowSpan={1} bg="#141214" bo rderRadius={'md'} marginBottom={'20px'}>
+        <GridItem h="200px" colSpan={4} rowSpan={1} bg="#141214" borderRadius={'md'} marginBottom={'20px'}>
           <Flex>
             <Text fontSize="3xl" fontWeight={'bold'} margin={'20px'}>
               {selected != '0' &&
@@ -180,8 +179,9 @@ const Dashboard = () => {
           <Divider marginBottom={'20px'} borderColor="gray.900" />
           <VStack spacing={2} align="stretch" padding="10px" borderRadius={'md'}>
             {devices.length > 0 ? (
-              devices.map((device) => (
+              devices.map((device: any, index) => (
                 <Grid
+                  key={index}
                   onClick={() => {
                     setShowTransfersModal(true);
                     setSelectedDevice(device.deviceId);
@@ -196,7 +196,6 @@ const Dashboard = () => {
                   fontWeight={'medium'}
                   textColor={'white'}
                   _hover={{ bg: 'gray.200', textColor: 'black' }}
-
                   // onClick={() => setSelected(org.id)}
                 >
                   <GridItem colSpan={1} rowSpan={2}>
@@ -241,6 +240,7 @@ const Dashboard = () => {
           setShowTransfersModal(false);
         }}
         deviceId={selectedDevice}
+        organisationContractAddress={organisations[parseInt(selected) - 1]?.address}
       />
       <CreateOrganisationModal
         isOpen={showCreateOrganisation}

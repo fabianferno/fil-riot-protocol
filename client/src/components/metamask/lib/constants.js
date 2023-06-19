@@ -1904,6 +1904,15 @@ const chains = [
     isMainnet: false,
     blockExplorer: 'https://fvm.starboard.ventures/calibration/explorer/',
   },
+  {
+    name: 'Mumbai Testnet',
+    chainId: 80001,
+    coinName: 'tMATIC',
+    icon: '/polygon.png',
+    rpc: 'https://matic-mumbai.chainstacklabs.com',
+    isMainnet: false,
+    blockExplorer: 'https://mumbai.polygonscan.com/',
+  },
 ];
 export {
   riotDeviceImages,
